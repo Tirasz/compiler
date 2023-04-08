@@ -9,41 +9,44 @@ options {
          ByteLexer lex = new ByteLexer(new ANTLRFileStream(args[0]));
          CommonTokenStream tokens = new CommonTokenStream (lex);
          ByteParser parser = new ByteParser(tokens);
-         parser.program();
+         ast.Program p = new ast.Program();
+         parser.program(p);
+         p.eval();
     }                                                           
 }
 
-program
-  : line+ EOF;
+program [ ast.Program p ]
+  : (line[p] { $p.addLine($line.node); } )+ EOF
+  ;
 
-line
-  : expression NEWLINE? { System.out.println($expression.value); }
-  | assignment NEWLINE?
+line [ ast.Program p ] returns [ ast.Line node ]
+  : expression NEWLINE? { $node = new ast.Line($p, $expression.node, false); }
+  | assignment NEWLINE? { $node = new ast.Line($p, $assignment.node, true); }
   | NEWLINE
   ;
 
-assignment
-  : 'm' '[' expression ']' '=' expression
-  | 'read' '(' expression ')'
+assignment returns [ ast.Expression node ]
+  : 'm' '[' index=expression ']' '=' value=expression { $node = new ast.IndexAssignment($index.node, $value.node); }
+  | 'read' '(' index=expression ')' { $node = new ast.ReadAssignment($index.node); }
   ;
 
-expression returns [int value]
-  : o1=term { $value = $o1.value; } (ADD o2=term {  if ("+".equals($ADD.text)) $value += $o2.value; else $value -= $o2.value; } )*
+expression returns [ ast.Expression node ]
+  : term { $node = $term.node; } (ADD o2=term { $node = new ast.BinaryExpression($node, $o2.node, $ADD.text); } )*
   ;
 
-term returns [int value]
-  : o1=factor { $value = $o1.value; } (MUL o2=factor { switch($MUL.text){ case "*": $value *= $o2.value; break; case "/": $value /= $o2.value; break; case "%": $value = $value % $o2.value; break; } })*
+term returns [ ast.Expression node ]
+  : factor { $node = $factor.node; } (MUL o2=factor { $node = new ast.BinaryExpression($node, $o2.node, $MUL.text); })*
   ;
 
-factor returns [int value]
-  : o1=atom { $value = $o1.value; } (EXP o2=factor { $value = (int) Math.pow($value, $o2.value); })?
+factor returns [ ast.Expression node ]
+  : atom { $node = $atom.node; } (EXP factor { $node = new ast.BinaryExpression($node, $factor.node, $EXP.text); })?
   ;
 
-atom returns [int value]
-  : INTEGER { $value = $INTEGER.int; }
-  | '(' expression ')' { $value = $expression.value; }
-  | ADD atom { $value = "-".equals($ADD.text) ? -$atom.value : $atom.value; }
-  | 'm' '[' expression ']' { $value = 1; } //TODO
+atom returns [ ast.Expression node ]
+  : INTEGER                { $node = new ast.ConstExpression($INTEGER.text); }
+  | '(' expression ')'     { $node = $expression.node; }
+  | 'm' '[' expression ']' { $node = new ast.IndexExpression($expression.node); } 
+  | ADD atom               { $node = new ast.UnaryExpression($atom.node, $ADD.text); }
   ;
  
 
