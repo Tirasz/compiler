@@ -27,6 +27,6 @@ public class Line {
   }
 
   public String toString(){
-    return expression.toString();
+    return expression.toString() + "\n";
   }
 }

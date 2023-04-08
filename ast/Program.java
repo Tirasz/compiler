@@ -11,8 +11,18 @@ public class Program {
   // A "program" is just a list of lines
   private List<Line> lines = new ArrayList<Line>();
   
+  private List<String> strLines = new ArrayList<>();
+
   public void addLine(Line l){
     lines.add(l);
+  }
+
+  public void addStrLine(String str){
+    this.strLines.add(str);
+  }
+
+  public String getStrLines(){
+    return strLines.toString();
   }
 
   // Evaluate the lines in order

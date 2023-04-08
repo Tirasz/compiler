@@ -12,14 +12,21 @@ public class UnaryExpression extends Expression{
 
   @Override
   public int eval(Program p) {
+    int value;
+    p.addStrLine("0");
     switch(this.op){
       case ADD:
-        return this.expression.eval(p);
+        value = this.expression.eval(p);
+        break;
       case SUB:
-        return -this.expression.eval(p);
+        value = -this.expression.eval(p);
+        break;
       default:
         throw new IllegalArgumentException("UnaryExpression node initialised with: " + this.op );
     }
+
+    p.addStrLine(op.toString());
+    return value;
   }
 
   public String toString(){

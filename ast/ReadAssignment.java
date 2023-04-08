@@ -12,7 +12,8 @@ public class ReadAssignment extends Expression{
   public int eval(Program prog) {
     int index = this.index.eval(prog);
 
-    System.out.println("Memory at index: " + Integer.toString(index) + " Should be: <INPUT>"); 
+    //System.out.println("Memory at index: " + Integer.toString(index) + " Should be: <INPUT>");
+    prog.addStrLine("read()"); 
     return 0;
   }
 

@@ -14,22 +14,31 @@ public class BinaryExpression extends Expression{
 
   @Override
   public int eval(Program p) {
+    int value;
    switch(this.op){
     case ADD:
-      return lhs.eval(p) + rhs.eval(p);
+      value = lhs.eval(p) + rhs.eval(p);
+      break;
     case SUB:
-      return lhs.eval(p) - rhs.eval(p);
+      value = lhs.eval(p) - rhs.eval(p);
+      break;
     case MUL:
-      return lhs.eval(p) * rhs.eval(p);
+      value = lhs.eval(p) * rhs.eval(p);
+      break;
     case DIV:
-      return lhs.eval(p) / rhs.eval(p);
+      value = lhs.eval(p) / rhs.eval(p);
+      break;
     case MOD:
-      return lhs.eval(p) % rhs.eval(p);
+      value =  lhs.eval(p) % rhs.eval(p);
+      break;
     case PWR:
-      return (int) Math.pow(lhs.eval(p), rhs.eval(p));
+      value = (int) Math.pow(lhs.eval(p), rhs.eval(p));
+      break;
     default:
       throw new IllegalArgumentException("Add node initialised with: " + this.op );
    }
+   p.addStrLine(op.toString());
+   return value;
   }
   
   public String toString() {

@@ -9,6 +9,7 @@ public class ConstExpression extends Expression{
 
   @Override
   public int eval(Program prog) {
+    prog.addStrLine(Integer.toString(value));
     return this.value;
   }
 

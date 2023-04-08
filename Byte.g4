@@ -12,6 +12,8 @@ options {
          ast.Program p = new ast.Program();
          parser.program(p);
          System.out.println(p);
+         p.eval();
+         System.out.println(p.getStrLines());
     }                                                           
 }
 
