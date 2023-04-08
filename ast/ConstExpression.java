@@ -1,9 +1,9 @@
 package ast;
 
-public class Const extends Expression{
+public class ConstExpression extends Expression{
   private int value;
 
-  public Const(String token){
+  public ConstExpression(String token){
     this.value = Integer.parseInt(token);
   }
 
