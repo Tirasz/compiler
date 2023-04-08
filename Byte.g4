@@ -11,12 +11,12 @@ options {
          ByteParser parser = new ByteParser(tokens);
          ast.Program p = new ast.Program();
          parser.program(p);
-         p.eval();
+         System.out.println(p);
     }                                                           
 }
 
 program [ ast.Program p ]
-  : (line[p] { $p.addLine($line.node); } )+ EOF
+  : (line[p] { ast.Line _line = $line.node; if(_line != null){$p.addLine($line.node);} } )+ EOF
   ;
 
 line [ ast.Program p ] returns [ ast.Line node ]
