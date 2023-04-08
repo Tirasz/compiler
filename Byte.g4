@@ -8,7 +8,8 @@ program
   : line+ EOF;
 
 line
-  : (expression | assignment) NEWLINE
+  : (expression | assignment) NEWLINE?
+  | NEWLINE
   ;
 
 expression
@@ -29,4 +30,3 @@ INTEGER      : DIGIT+;
 WHITESPACE  : [ \t\r]+ -> skip;
 NEWLINE     : [\n];
 DIGIT  : [0-9];
-
