@@ -15,5 +15,9 @@ public class ReadAssignment extends Expression{
     System.out.println("Memory at index: " + Integer.toString(index) + " Should be: <INPUT>"); 
     return 0;
   }
+
+  public String toString(){
+    return "m[" + index + "] = <INPUT>";
+  }
   
 }

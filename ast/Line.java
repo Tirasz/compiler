@@ -25,4 +25,8 @@ public class Line {
     if(!isAss)
       System.out.println(result);
   }
+
+  public String toString(){
+    return expression.toString();
+  }
 }

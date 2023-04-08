@@ -32,5 +32,7 @@ public class BinaryExpression extends Expression{
    }
   }
   
-  
+  public String toString() {
+    return lhs + op.toString() + rhs;
+  }
 }

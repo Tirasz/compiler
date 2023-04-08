@@ -12,4 +12,7 @@ public class ConstExpression extends Expression{
     return this.value;
   }
 
+  public String toString() {
+    return Integer.toString(value);
+  }
 }

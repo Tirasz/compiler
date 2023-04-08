@@ -21,4 +21,13 @@ public class Program {
       lines.get(i).eval();
     }
   }
+
+  public String toString() {
+    StringBuffer prg = new StringBuffer("## Generated source\n\n");
+    for (Line l: lines) {
+        prg.append(l);
+    }
+    return prg.toString();
+}
+
 }

@@ -14,6 +14,10 @@ public enum Operator {
     this.token = token;
   }
 
+  public String toString(){
+    return token;
+  }
+
   public static Operator fromString(String string){
     for(Operator t: Operator.values()){
       if(t.token.equals(string)){

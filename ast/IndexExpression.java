@@ -14,5 +14,8 @@ public class IndexExpression extends Expression {
     return 0;
   }
 
+  public String toString() {
+    return "val(m[" + index + "])";
+  }
   
 }

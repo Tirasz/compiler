@@ -21,5 +21,9 @@ public class UnaryExpression extends Expression{
         throw new IllegalArgumentException("UnaryExpression node initialised with: " + this.op );
     }
   }
+
+  public String toString(){
+    return (this.op == Operator.ADD ? "" : "-") + this.expression;
+  }
   
 }

@@ -17,5 +17,9 @@ public class IndexAssignment extends Expression{
     System.out.println("Memory at index: " + Integer.toString(index) + " Should be: " + Integer.toString(value)); 
     return 0;
   }
+
+  public String toString() {
+    return "m[" + index + "] = " + value;
+  }
   
 }
