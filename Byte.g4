@@ -17,7 +17,7 @@ program
   : line+ EOF;
 
 line
-  : expression NEWLINE? { System.out.print($expression.value); }
+  : expression NEWLINE? { System.out.println($expression.value); }
   | assignment NEWLINE?
   | NEWLINE
   ;
@@ -27,7 +27,7 @@ expression returns [ int value ]
   | o1=expression exp='^' o2=expression { $value = (int) Math.pow($o1.value, $o2.value); } // Math.pow returns double
   | o1=expression mult=('*' | '/' | '%') o2=expression { switch($mult.text){ case "*": $value = $o1.value * $o2.value; break; case "/": $value = $o1.value / $o2.value; break; case "%": $value = $o1.value % $o2.value; break; } }
   | o1=expression add=('+' | '-') o2=expression { $value = ("+".equals($add.text)) ? $o1.value + $o2.value : $o1.value - $o2.value; }
-  | 'm[' i=expression ']' { $value = $i.value; }
+  | 'm[' i=expression ']' { $value = $i.value; } //TODO
   | INTEGER { $value = $INTEGER.int; }
   ;
 
@@ -37,9 +37,9 @@ assignment
   ;
 
 INTEGER      : DIGIT+;
-WHITESPACE  : [ \t\r]+ -> skip;
-NEWLINE     : [\n];
-DIGIT  : [0-9];
+WHITESPACE   : [ \t\r]+ -> skip;
+NEWLINE      : [\n];
+DIGIT        : [0-9];
 
 // antlr Byte.g4
 // antlrc Byte
