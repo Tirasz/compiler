@@ -28,29 +28,28 @@ assignment
   ;
 
 expression returns [int value]
-  : term (ADD term)*
+  : o1=term { $value = $o1.value; } (ADD o2=term {  if ("+".equals($ADD.text)) $value += $o2.value; else $value -= $o2.value; } )*
   ;
 
 term returns [int value]
-  : factor (MUL factor)*
+  : o1=factor { $value = $o1.value; } (MUL o2=factor { switch($MUL.text){ case "*": $value *= $o2.value; break; case "/": $value /= $o2.value; break; case "%": $value = $value % $o2.value; break; } })*
   ;
 
 factor returns [int value]
-  : atom (EXP atom)*
+  : o1=atom { $value = $o1.value; } (EXP o2=factor { $value = (int) Math.pow($value, $o2.value); })?
   ;
 
 atom returns [int value]
-  : INTEGER
-  | '(' expression ')'
-  | ADD atom
-  | 'm' '[' expression ']'
+  : INTEGER { $value = $INTEGER.int; }
+  | '(' expression ')' { $value = $expression.value; }
+  | ADD atom { $value = "-".equals($ADD.text) ? -$atom.value : $atom.value; }
+  | 'm' '[' expression ']' { $value = 1; } //TODO
   ;
  
 
 WHITESPACE   : [ \t\r]+ -> skip;
 NEWLINE      : [\n];
-DIGIT        : [0-9];
-INTEGER      : DIGIT+;
+INTEGER      : [0-9]+;
 ADD          : '+' | '-';
 MUL          : '*' | '/' | '%';
 EXP          : '^' ;
