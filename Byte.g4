@@ -16,11 +16,11 @@ options {
 }
 
 program [ generator.Generator g ]
-  : (line[g] { g.lines++; } )+ EOF
+  : (line[g])+ EOF
   ;
 
 line [ generator.Generator g ]
-  : expression[g] NEWLINE? { g.addInstruction(";"); if($expression.canEval) System.out.println($expression.v);}
+  : expression[g] NEWLINE? { g.addInstruction(";");  }
   | assignment[g] NEWLINE? { g.addInstruction(";;"); }
   | NEWLINE
   ;
