@@ -19,37 +19,37 @@ options {
 }
 
 program [ ast.Program p ]
-  : (line[p] { } )+ EOF
+  : (line[p])+ EOF
   ;
 
 line [ ast.Program p ] 
-  : expression[p] NEWLINE? {  }
-  | assignment[p] NEWLINE? {  }
+  : expression[p] NEWLINE?
+  | assignment[p] NEWLINE?
   | NEWLINE
   ;
 
 assignment [ ast.Program p ] 
-  : 'm' '[' index=expression[p] ']' '=' value=expression[p] { p.testLines.add("[]="); }
-  | 'read' '(' index=expression[p] ')' { p.testLines.add("()"); }
+  : MEM OB expression[p] CB EQ expression[p]    { p.testLines.add("[]="); }
+  | READ OP expression[p] CP                    { p.testLines.add("()"); }
   ;
 
 expression [ ast.Program p ]
-  : term[p] { } (ADD o2=term[p] { p.testLines.add($ADD.text); } )*
+  : term[p]   ( ADD term[p]       { p.testLines.add($ADD.text); } )*
   ;
 
 term [ ast.Program p ] 
-  : factor[p] { } (MUL o2=factor[p] { p.testLines.add($MUL.text); })*
+  : factor[p] ( MUL factor[p]   { p.testLines.add($MUL.text); } )*
   ;
 
 factor [ ast.Program p ] 
-  : atom[p] {  } (EXP factor[p] { p.testLines.add($EXP.text); })?
+  : atom[p]   ( EXP factor[p]     { p.testLines.add($EXP.text); } )?
   ;
 
 atom [ ast.Program p ] 
-  : INTEGER                { p.testLines.add($INTEGER.text); }
-  | '(' expression[p] ')'     {  }
-  | 'm' '[' expression[p] ']' { p.testLines.add("[]"); } 
-  | ADD { p.testLines.add("0"); } atom[p] { p.testLines.add($ADD.text); }
+  : INTEGER                                 { p.testLines.add($INTEGER.text); }
+  | MEM OB expression[p] CB                 { p.testLines.add("[]"); } 
+  | ADD { p.testLines.add("0"); } atom[p]   { p.testLines.add($ADD.text); }
+  | OP expression[p] CP   
   ;
 
 
@@ -57,9 +57,17 @@ atom [ ast.Program p ]
 WHITESPACE   : [ \t\r]+ -> skip;
 NEWLINE      : [\n];
 INTEGER      : [0-9]+;
-ADD          : '+' | '-';
+READ         : 'read';
+ADD          : '+' | '-' ;
 MUL          : '*' | '/' | '%';
 EXP          : '^' ;
+MEM          : 'm' ;
+EQ           : '=' ;
+OB           : '[' ;
+CB           : ']' ;
+OP           : '(' ;
+CP           : ')' ;
+
 
 
 // antlr Byte.g4
