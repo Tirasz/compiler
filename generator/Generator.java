@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class Generator {
-  
   private Stack<String> programStack = new Stack<String>();
   public int lines = 0;
 
   // programStack will contain the tokens in postfix notation, for example:
   // [9, 1, []=, ;;], meaning m[3+6] = 1 before optimization.
   public void addInstruction(String inst){
+    System.out.println("PUSHING: " + inst);
     programStack.push(inst);
-    tryEvalTop();
+    //tryEvalTop();
   }
 
   private void tryEvalTop(){
@@ -42,6 +42,15 @@ public class Generator {
     // Otherwise calculate the instruction with its constant operands and push the result on the stack
     int result = evalInstruction(rhs, lhs, instruction);
     programStack.push(Integer.toString(result));
+  }
+
+  public void replaceExpression(int value){
+    System.out.println("Removing top 3");
+    programStack.pop();
+    programStack.pop();
+    programStack.pop();
+    System.out.println("PUSHING: " + value);
+    programStack.push(Integer.toString(value));
   }
 
   private int evalInstruction(String rhss, String lhss, Instruction instruction){

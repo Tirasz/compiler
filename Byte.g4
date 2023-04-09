@@ -20,7 +20,7 @@ program [ generator.Generator g ]
   ;
 
 line [ generator.Generator g ]
-  : expression[g] NEWLINE? { g.addInstruction(";"); }
+  : expression[g] NEWLINE? { g.addInstruction(";"); if($expression.canEval) System.out.println($expression.v);}
   | assignment[g] NEWLINE? { g.addInstruction(";;"); }
   | NEWLINE
   ;
@@ -30,23 +30,23 @@ assignment [ generator.Generator g ]
   | READ OP expression[g] CP                    { g.addInstruction("()"); }
   ;
 
-expression [ generator.Generator g ]
-  : term[g]   ( ADD term[g]                     { g.addInstruction($ADD.text); } )*
+expression [ generator.Generator g ] returns [ boolean canEval, int v ]
+  : o1=term[g]  { $canEval = $o1.canEval; $v = $o1.v; } ( ADD o2=term[g] { g.addInstruction($ADD.text); $canEval = $canEval && $o2.canEval; if("+".equals($ADD.text)) $v += $o2.v; else $v -= $o2.v; if($canEval) g.replaceExpression($v); } )*
   ;
 
-term [ generator.Generator g ]
-  : factor[g] ( MUL factor[g]                   { g.addInstruction($MUL.text); } )*
+term [ generator.Generator g ] returns [ boolean canEval, int v ]
+  : o1=factor[g] { $canEval = $o1.canEval; $v = $o1.v; } ( MUL o2=factor[g] { g.addInstruction($MUL.text); $canEval = $canEval && $o2.canEval; switch ($MUL.text){ case "*": $v = $v * $o2.v; break; case "/": $v = $v / $o2.v; break; case "%": $v = $v % $o2.v; break; } if($canEval) g.replaceExpression($v); } )*
   ;
 
-factor [ generator.Generator g ] 
-  : atom[g]   ( EXP factor[g]                   { g.addInstruction($EXP.text); } )?
+factor [ generator.Generator g ] returns [ boolean canEval, int v ]
+  : atom[g] { $canEval = $atom.canEval; $v = $atom.v; }  ( EXP factor[g] { g.addInstruction($EXP.text); $canEval = $canEval && $factor.canEval; $v = (int) Math.pow($v, $factor.v); if($canEval) g.replaceExpression($v); } )?
   ;
 
-atom [ generator.Generator g ] 
-  : INTEGER                                     { g.addInstruction($INTEGER.text); }
-  | MEM OB expression[g] CB                     { g.addInstruction("[]"); } 
-  | ADD { g.addInstruction("0"); } atom[g]       { g.addInstruction($ADD.text); } // will accept (+5-8) as well (i think thats ok)
-  | OP expression[g] CP   
+atom [ generator.Generator g ] returns [ boolean canEval, int v ]
+  : INTEGER                                     { g.addInstruction($INTEGER.text); $canEval = true; $v = Integer.parseInt($INTEGER.text); }
+  | MEM OB expression[g] CB                     { g.addInstruction("[]"); $canEval = false; } 
+  | ADD { g.addInstruction("0"); } atom[g]      { g.addInstruction($ADD.text); $canEval = $atom.canEval; if("+".equals($ADD.text)) $v = $atom.v; else $v = -$atom.v; if($canEval) g.replaceExpression($v); } // will accept (+5-8) as well (i think thats ok)
+  | OP expression[g] CP                         { $canEval = $expression.canEval; $v = $expression.v; }
   ;
 
 
