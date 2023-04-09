@@ -11,22 +11,10 @@ public class UnaryExpression extends Expression{
   }
 
   @Override
-  public int eval(Program p) {
-    int value;
+  public void eval(Program p) {
     p.addStrLine("0");
-    switch(this.op){
-      case ADD:
-        value = this.expression.eval(p);
-        break;
-      case SUB:
-        value = -this.expression.eval(p);
-        break;
-      default:
-        throw new IllegalArgumentException("UnaryExpression node initialised with: " + this.op );
-    }
-
+    expression.eval(p);
     p.addStrLine(op.toString());
-    return value;
   }
 
   public String toString(){

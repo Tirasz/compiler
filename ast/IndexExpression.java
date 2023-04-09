@@ -8,14 +8,13 @@ public class IndexExpression extends Expression {
   }
 
   @Override
-  public int eval(Program prog) {
+  public void eval(Program prog) {
     this.index.eval(prog);
     prog.addStrLine(Operator.INE.toString());
-    return 0;
   }
 
   public String toString() {
-    return "val(m[" + index + "])";
+    return "m[" + index + "]";
   }
   
 }

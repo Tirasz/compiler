@@ -11,11 +11,10 @@ public class IndexAssignment extends Expression{
   }
 
   @Override
-  public int eval(Program prog) {
-    this.index.eval(prog);
-    this.value.eval(prog);
+  public void eval(Program prog) {
+    index.eval(prog);
+    value.eval(prog);
     prog.addStrLine(Operator.INA.toString());
-    return 0;
   }
 
   public String toString() {

@@ -21,9 +21,7 @@ public class Line {
   }
 
   public void eval(){
-    int result = this.expression.eval(this.program);
-    if(!isAss)
-      System.out.println(result);
+    expression.eval(this.program);
   }
 
   public String toString(){

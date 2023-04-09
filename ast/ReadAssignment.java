@@ -9,14 +9,13 @@ public class ReadAssignment extends Expression{
   }
 
   @Override
-  public int eval(Program prog) {
-    this.index.eval(prog);
+  public void eval(Program prog) {
+    index.eval(prog);
     prog.addStrLine(Operator.RDA.toString()); 
-    return 0;
   }
 
   public String toString(){
-    return "m[" + index + "] = <INPUT>";
+    return "read(" + index + ")";
   }
   
 }
