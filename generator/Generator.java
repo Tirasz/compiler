@@ -7,7 +7,7 @@ public class Generator {
   
   private ArrayList<String> instructions = new ArrayList<String>();
   private Stack<String> idk = new Stack<String>();
-
+  public int lines = 0;
 
   public void addInstruction(String inst){
     instructions.add(inst);
@@ -20,14 +20,22 @@ public class Generator {
     Instruction instruction = Instruction.fromString(idk.peek());
     if(!instruction.isEvaluable())
       return;
-    if(idk.size() < 3)
-      throw new IllegalStateException("Binary expression on top of stack, but not enough operands!");
     
-    // If it can be, check its operands are constants
-    instruction = Instruction.fromString(idk.pop());
+    if(idk.size() < 3)
+      throw new IllegalStateException("Error on line (" + lines + "): Not enough operands for binary expression!");
+    
+    // If it can be, check if its operands are constants
+    idk.pop();
     String rhs = idk.pop();
     String lhs = idk.pop();
-    if(Instruction.fromString(lhs) != Instruction.CNT || Instruction.fromString(rhs) != Instruction.CNT){
+    Instruction rhI = Instruction.fromString(rhs);
+    Instruction lhI = Instruction.fromString(lhs);
+
+    if(lhI == Instruction.ASS || lhI == Instruction.EXP || rhI == Instruction.ASS || lhI == Instruction.EXP){
+      throw new IllegalStateException("Error on line (" + lines + "): Missing operands for binary expression!");
+    }
+
+    if(lhI != Instruction.CNT || rhI != Instruction.CNT){
       // If its operands are not constants, revert the stack
       idk.push(lhs);
       idk.push(rhs);
@@ -54,10 +62,13 @@ public class Generator {
         return lhs % rhs;
       case DIV:
         return lhs / rhs;
-      case PWR: 
+      case PWR:
+        if(rhs < 0){
+          throw new IllegalArgumentException("Error on line (" + lines + "): Cannot raise to a negative power!");
+        } 
         return (int) Math.pow(lhs, rhs);
       default:
-        throw new IllegalArgumentException("Not supported instruction: " + instruction.toString());
+        throw new IllegalArgumentException("Error on line (" + lines + "): Not supported instruction: " + instruction.toString());
     }
   }
 

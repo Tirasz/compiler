@@ -16,7 +16,7 @@ options {
 }
 
 program [ generator.Generator g ]
-  : (line[g])+ EOF
+  : (line[g] { g.lines++; } )+ EOF
   ;
 
 line [ generator.Generator g ]
