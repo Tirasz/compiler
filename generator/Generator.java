@@ -21,8 +21,9 @@ public class Generator {
     if(!instruction.isEvaluable())
       return;
     
+    // Instead of emptyStackException :)
     if(idk.size() < 3)
-      throw new IllegalStateException("Error on line (" + lines + "): Not enough operands for binary expression!");
+      throw new IllegalStateException("Error on line (" + lines + "): Missing operands for binary expression!");
     
     // If it can be, check if its operands are constants
     idk.pop();
@@ -30,10 +31,6 @@ public class Generator {
     String lhs = idk.pop();
     Instruction rhI = Instruction.fromString(rhs);
     Instruction lhI = Instruction.fromString(lhs);
-
-    if(lhI == Instruction.ASS || lhI == Instruction.EXP || rhI == Instruction.ASS || lhI == Instruction.EXP){
-      throw new IllegalStateException("Error on line (" + lines + "): Missing operands for binary expression!");
-    }
 
     if(lhI != Instruction.CNT || rhI != Instruction.CNT){
       // If its operands are not constants, revert the stack
@@ -67,7 +64,7 @@ public class Generator {
           throw new IllegalArgumentException("Error on line (" + lines + "): Cannot raise to a negative power!");
         } 
         return (int) Math.pow(lhs, rhs);
-      default:
+      default: // Wont happen
         throw new IllegalArgumentException("Error on line (" + lines + "): Not supported instruction: " + instruction.toString());
     }
   }
