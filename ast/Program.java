@@ -2,16 +2,13 @@ package ast;
 
 import java.util.*;
 
-/*
-  program
-  : line+ EOF;
- */
-
 public class Program {
-  // A "program" is just a list of lines
+ 
   private List<Line> lines = new ArrayList<Line>();
   
   private List<String> strLines = new ArrayList<>();
+
+  public List<String> testLines = new ArrayList<>();
 
   public void addLine(Line l){
     lines.add(l);
