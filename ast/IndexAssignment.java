@@ -12,10 +12,9 @@ public class IndexAssignment extends Expression{
 
   @Override
   public int eval(Program prog) {
-    int index = this.index.eval(prog);
-    int value = this.value.eval(prog);
-    //System.out.println("Memory at index: " + Integer.toString(index) + " Should be: " + Integer.toString(value)); 
-    prog.addStrLine("[]=");
+    this.index.eval(prog);
+    this.value.eval(prog);
+    prog.addStrLine(Operator.INA.toString());
     return 0;
   }
 

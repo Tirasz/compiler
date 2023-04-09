@@ -9,9 +9,8 @@ public class IndexExpression extends Expression {
 
   @Override
   public int eval(Program prog) {
-    int index = this.index.eval(prog);
-    //System.out.println("Should eval memory at index: " + Integer.toString(index)); 
-    prog.addStrLine("val[]");
+    this.index.eval(prog);
+    prog.addStrLine(Operator.INE.toString());
     return 0;
   }
 

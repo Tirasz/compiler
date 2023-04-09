@@ -6,7 +6,10 @@ public enum Operator {
   MUL("*"),
   DIV("/"),
   MOD("%"),
-  PWR("^");
+  PWR("^"),
+  INE("[]"), // Index expression, m val at index
+  INA("[]="), // Index assignment, m val at index = value
+  RDA("()"); // Read assignment, m val at index = INPUT
 
   private String token;
 

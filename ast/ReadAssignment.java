@@ -10,10 +10,8 @@ public class ReadAssignment extends Expression{
 
   @Override
   public int eval(Program prog) {
-    int index = this.index.eval(prog);
-
-    //System.out.println("Memory at index: " + Integer.toString(index) + " Should be: <INPUT>");
-    prog.addStrLine("read()"); 
+    this.index.eval(prog);
+    prog.addStrLine(Operator.RDA.toString()); 
     return 0;
   }
 
