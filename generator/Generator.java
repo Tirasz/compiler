@@ -5,43 +5,43 @@ import java.util.Stack;
 
 public class Generator {
   
-  private ArrayList<String> instructions = new ArrayList<String>();
-  private Stack<String> idk = new Stack<String>();
+  private Stack<String> programStack = new Stack<String>();
   public int lines = 0;
 
+  // programStack will contain the tokens in postfix notation, for example:
+  // [9, 1, []=, ;;], meaning m[3+6] = 1 before optimization.
   public void addInstruction(String inst){
-    instructions.add(inst);
-    idk.push(inst);
+    programStack.push(inst);
     tryEvalTop();
   }
 
   private void tryEvalTop(){
     // Check if the top instruction can be evaluated (basically not a constant or memory access / assignment)
-    Instruction instruction = Instruction.fromString(idk.peek());
+    Instruction instruction = Instruction.fromString(programStack.peek());
     if(!instruction.isEvaluable())
       return;
     
     // Instead of emptyStackException :)
-    if(idk.size() < 3)
+    if(programStack.size() < 3)
       throw new IllegalStateException("Error on line (" + lines + "): Missing operands for binary expression!");
     
     // If it can be, check if its operands are constants
-    idk.pop();
-    String rhs = idk.pop();
-    String lhs = idk.pop();
+    programStack.pop();
+    String rhs = programStack.pop();
+    String lhs = programStack.pop();
     Instruction rhI = Instruction.fromString(rhs);
     Instruction lhI = Instruction.fromString(lhs);
 
     if(lhI != Instruction.CNT || rhI != Instruction.CNT){
       // If its operands are not constants, revert the stack
-      idk.push(lhs);
-      idk.push(rhs);
-      idk.push(instruction.toString());
+      programStack.push(lhs);
+      programStack.push(rhs);
+      programStack.push(instruction.toString());
       return;
     }
     // Otherwise calculate the instruction with its constant operands and push the result on the stack
     int result = evalInstruction(rhs, lhs, instruction);
-    idk.push(Integer.toString(result));
+    programStack.push(Integer.toString(result));
   }
 
   private int evalInstruction(String rhss, String lhss, Instruction instruction){
@@ -70,7 +70,7 @@ public class Generator {
   }
 
   public String toString(){
-    return instructions.toString() + "\n" + idk.toString();
+    return programStack.toString();
   }
 
 
