@@ -34,24 +34,23 @@ assignment [ ast.Program p ]
   ;
 
 expression [ ast.Program p ]
-  : term[p]   ( ADD term[p]       { p.testLines.add($ADD.text); } )*
+  : term[p]   ( ADD term[p]                     { p.testLines.add($ADD.text); } )*
   ;
 
 term [ ast.Program p ] 
-  : factor[p] ( MUL factor[p]   { p.testLines.add($MUL.text); } )*
+  : factor[p] ( MUL factor[p]                   { p.testLines.add($MUL.text); } )*
   ;
 
 factor [ ast.Program p ] 
-  : atom[p]   ( EXP factor[p]     { p.testLines.add($EXP.text); } )?
+  : atom[p]   ( EXP factor[p]                   { p.testLines.add($EXP.text); } )?
   ;
 
 atom [ ast.Program p ] 
-  : INTEGER                                 { p.testLines.add($INTEGER.text); }
-  | MEM OB expression[p] CB                 { p.testLines.add("[]"); } 
-  | ADD { p.testLines.add("0"); } atom[p]   { p.testLines.add($ADD.text); }
+  : INTEGER                                     { p.testLines.add($INTEGER.text); }
+  | MEM OB expression[p] CB                     { p.testLines.add("[]"); } 
+  | ADD { p.testLines.add("0"); } atom[p]       { p.testLines.add($ADD.text); } // will accept (+5-8) as well (i think thats ok)
   | OP expression[p] CP   
   ;
-
 
 
 WHITESPACE   : [ \t\r]+ -> skip;
