@@ -9,47 +9,44 @@ options {
          ByteLexer lex = new ByteLexer(new ANTLRFileStream(args[0]));
          CommonTokenStream tokens = new CommonTokenStream (lex);
          ByteParser parser = new ByteParser(tokens);
-         ast.Program p = new ast.Program();
-         parser.program(p);
-         System.out.println(p);
-         p.eval();
-         System.out.println(p.getStrLines());
-         System.out.println(p.testLines);
+         generator.Generator g = new generator.Generator();
+         parser.program(g);
+         System.out.println(g);
     }                                                           
 }
 
-program [ ast.Program p ]
-  : (line[p])+ EOF
+program [ generator.Generator g ]
+  : (line[g])+ EOF
   ;
 
-line [ ast.Program p ] 
-  : expression[p] NEWLINE?
-  | assignment[p] NEWLINE?
+line [ generator.Generator g ]
+  : expression[g] NEWLINE? { g.addInstruction(";"); }
+  | assignment[g] NEWLINE? { g.addInstruction(";;"); }
   | NEWLINE
   ;
 
-assignment [ ast.Program p ] 
-  : MEM OB expression[p] CB EQ expression[p]    { p.testLines.add("[]="); }
-  | READ OP expression[p] CP                    { p.testLines.add("()"); }
+assignment [ generator.Generator g ]
+  : MEM OB expression[g] CB EQ expression[g]    { g.addInstruction("[]="); }
+  | READ OP expression[g] CP                    { g.addInstruction("()"); }
   ;
 
-expression [ ast.Program p ]
-  : term[p]   ( ADD term[p]                     { p.testLines.add($ADD.text); } )*
+expression [ generator.Generator g ]
+  : term[g]   ( ADD term[g]                     { g.addInstruction($ADD.text); } )*
   ;
 
-term [ ast.Program p ] 
-  : factor[p] ( MUL factor[p]                   { p.testLines.add($MUL.text); } )*
+term [ generator.Generator g ]
+  : factor[g] ( MUL factor[g]                   { g.addInstruction($MUL.text); } )*
   ;
 
-factor [ ast.Program p ] 
-  : atom[p]   ( EXP factor[p]                   { p.testLines.add($EXP.text); } )?
+factor [ generator.Generator g ] 
+  : atom[g]   ( EXP factor[g]                   { g.addInstruction($EXP.text); } )?
   ;
 
-atom [ ast.Program p ] 
-  : INTEGER                                     { p.testLines.add($INTEGER.text); }
-  | MEM OB expression[p] CB                     { p.testLines.add("[]"); } 
-  | ADD { p.testLines.add("0"); } atom[p]       { p.testLines.add($ADD.text); } // will accept (+5-8) as well (i think thats ok)
-  | OP expression[p] CP   
+atom [ generator.Generator g ] 
+  : INTEGER                                     { g.addInstruction($INTEGER.text); }
+  | MEM OB expression[g] CB                     { g.addInstruction("[]"); } 
+  | ADD { g.addInstruction("0"); } atom[g]       { g.addInstruction($ADD.text); } // will accept (+5-8) as well (i think thats ok)
+  | OP expression[g] CP   
   ;
 
 
