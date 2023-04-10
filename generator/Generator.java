@@ -1,5 +1,9 @@
 package generator;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.util.Iterator;
 import java.util.Stack;
 
 public class Generator {
@@ -22,5 +26,16 @@ public class Generator {
     return programStack.toString();
   }
 
+  public void generateByteCode() throws FileNotFoundException{
+    StringBuilder bytecode = new StringBuilder();
+    Iterator<String> itr = programStack.iterator();
 
+    while(itr.hasNext()){
+      bytecode.append(Instruction.toOpCode(itr.next()));
+    }
+    PrintStream out = new PrintStream(new FileOutputStream("output.bytecode"));
+    out.print(bytecode);
+    out.close();
+    System.out.println("Bytecode generated: output.bytecode");
+  }
 }

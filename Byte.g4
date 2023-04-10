@@ -11,7 +11,7 @@ options {
          ByteParser parser = new ByteParser(tokens);
          generator.Generator g = new generator.Generator();
          parser.program(g);
-         System.out.println(g);
+         g.generateByteCode();
     }                                                           
 }
 
