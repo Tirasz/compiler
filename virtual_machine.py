@@ -106,9 +106,6 @@ def _parse_opcode(bytecode):
 
     return (parsed_bits, instruction)
             
-
-
-
 def run_bytecode(bytecode):
     # The file will contain "bytecode": a series of 'opcodes', in binary 
     # The only 'opcode' with additional parameters will be push (0000):
@@ -120,7 +117,6 @@ def run_bytecode(bytecode):
         i += parsed_bits
         instruction()
     
-
 def main():
     if(len(argv) == 1):
         print("Error: No input file provided!")
