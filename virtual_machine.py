@@ -9,7 +9,6 @@ RAM = [0] * MAX_MEMORY
 REGISTER_A = REGISTER_B = 0
 
 def push(value): # 
-    print(f"PUSHING: {value}")
     STACK.append(value)
 
 def _push_wrapper(value):
@@ -62,7 +61,7 @@ def memr(): #
 
 # read(x) = m[x] = input() --> push x, push input, mema
 def inp(): # 
-    REGISTER_A = int(input("Input an integer"))
+    REGISTER_A = int(input("Input an integer: \n"))
     push(REGISTER_A)
 
 def _print(): # 
