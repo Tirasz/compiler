@@ -27,19 +27,55 @@ line [ generator.Generator g ]
 
 assignment [ generator.Generator g ]
   : MEM OB expression[g] CB EQ expression[g]    { g.addInstruction("[]="); }
-  | READ OP expression[g] CP                    { g.addInstruction("()"); }
+  | READ OP expression[g] CP                    { g.addInstruction("()");  }
   ;
 
 expression [ generator.Generator g ] returns [ boolean canEval, int v ]
-  : o1=term[g]  { $canEval = $o1.canEval; $v = $o1.v; } ( ADD o2=term[g] { g.addInstruction($ADD.text); $canEval = $canEval && $o2.canEval; if("+".equals($ADD.text)) $v += $o2.v; else $v -= $o2.v; if($canEval) g.replaceExpression($v); } )*
+  : o1=term[g] { $canEval = $o1.canEval; $v = $o1.v; } 
+    ( ADD o2=term[g] 
+      { 
+        g.addInstruction($ADD.text);
+        $canEval = $canEval && $o2.canEval;
+        if("+".equals($ADD.text))
+          $v += $o2.v;
+        else
+          $v -= $o2.v;
+        if($canEval)
+          g.replaceExpression($v); 
+      } 
+    )*
   ;
 
 term [ generator.Generator g ] returns [ boolean canEval, int v ]
-  : o1=factor[g] { $canEval = $o1.canEval; $v = $o1.v; } ( MUL o2=factor[g] { g.addInstruction($MUL.text); $canEval = $canEval && $o2.canEval; switch ($MUL.text){ case "*": $v = $v * $o2.v; break; case "/": $v = $v / $o2.v; break; case "%": $v = $v % $o2.v; break; } if($canEval) g.replaceExpression($v); } )*
+  : o1=factor[g] { $canEval = $o1.canEval; $v = $o1.v; } 
+    ( MUL o2=factor[g] 
+      { 
+        g.addInstruction($MUL.text);
+        $canEval = $canEval && $o2.canEval;
+        switch ($MUL.text){
+          case "*": $v = $v * $o2.v; break;
+          case "/": $v = $v / $o2.v; break;
+          case "%": $v = $v % $o2.v; break;
+        }
+        if($canEval) 
+          g.replaceExpression($v); 
+      } 
+    )*
   ;
 
 factor [ generator.Generator g ] returns [ boolean canEval, int v ]
-  : atom[g] { $canEval = $atom.canEval; $v = $atom.v; }  ( EXP factor[g] { g.addInstruction($EXP.text); $canEval = $canEval && $factor.canEval; $v = (int) Math.pow($v, $factor.v); if($canEval) g.replaceExpression($v); } )?
+  : atom[g] { $canEval = $atom.canEval; $v = $atom.v; }  
+    ( EXP factor[g] 
+      {
+        if($factor.canEval && $factor.v < 0)
+          throw new IllegalArgumentException("Cannot raise to negative power");
+        g.addInstruction($EXP.text);
+        $canEval = $canEval && $factor.canEval;
+        $v = (int) Math.pow($v, $factor.v);
+        if($canEval) 
+          g.replaceExpression($v);
+      } 
+    )?
   ;
 
 atom [ generator.Generator g ] returns [ boolean canEval, int v ]
