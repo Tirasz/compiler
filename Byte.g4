@@ -99,9 +99,3 @@ OB           : '[' ;
 CB           : ']' ;
 OP           : '(' ;
 CP           : ')' ;
-
-
-
-// antlr Byte.g4
-// antlrc Byte
-// grun Byte program [input.file] (-tree / -gui)

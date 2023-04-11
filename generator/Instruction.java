@@ -11,11 +11,12 @@ public enum Instruction {
   DIV("/"),
   MOD("%"),
   PWR("^"),
-  MEMR("[]"),     // Index expression, m val at index
-  MEMA("[]="),   // Index assignment, m val at index = value
-  READ("()"),   // Read assignment, m val at index = INPUT
-  EXP(";"),   // Eval and print expression
-  ASS(";;"); // nothing to eval, assignment
+  EXP(";"),   
+  ASS(";;"),
+  MEMR("[]"),    
+  MEMA("[]="),   
+  READ("()");   
+ 
 
   private static Map<Instruction, String> opCodes = Map.ofEntries(
     entry(CNT, "0000"),

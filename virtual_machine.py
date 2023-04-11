@@ -1,6 +1,3 @@
-from sys import argv
-from pathlib import Path
-
 OPCODE_LEN = 4
 PUSH_LEN_FIELD_LEN = 6
 MAX_MEMORY = 1024
@@ -8,7 +5,7 @@ STACK = []
 RAM = [0] * MAX_MEMORY
 REGISTER_A = REGISTER_B = 0
 
-def push(value): # 
+def push(value): 
     STACK.append(value)
 
 def _push_wrapper(value):
@@ -16,43 +13,43 @@ def _push_wrapper(value):
         push(value)
     return _push
 
-def add(): # 
+def add(): 
     global REGISTER_B, REGISTER_A
     REGISTER_B = STACK.pop()
     REGISTER_A = STACK.pop()
     push(REGISTER_A + REGISTER_B)
 
-def sub(): # 
+def sub(): 
     global REGISTER_B, REGISTER_A
     REGISTER_B = STACK.pop()
     REGISTER_A = STACK.pop()
     push(REGISTER_A - REGISTER_B)
 
-def mul(): # 
+def mul(): 
     global REGISTER_B, REGISTER_A
     REGISTER_B = STACK.pop()
     REGISTER_A = STACK.pop()
     push(REGISTER_A * REGISTER_B)
 
-def div(): # 
+def div(): 
     global REGISTER_B, REGISTER_A
     REGISTER_B = STACK.pop()
     REGISTER_A = STACK.pop()
     push(REGISTER_A // REGISTER_B)
 
-def mod(): # 
+def mod(): 
     global REGISTER_B, REGISTER_A
     REGISTER_B = STACK.pop()
     REGISTER_A = STACK.pop()
     push(REGISTER_A % REGISTER_B)
 
-def pwr(): #
+def pwr(): 
     global REGISTER_B, REGISTER_A
     REGISTER_B = STACK.pop()
     REGISTER_A = STACK.pop()
     push(REGISTER_A ** REGISTER_B)
 
-def mema(): # 
+def mema():  
     global REGISTER_A, REGISTER_B
     REGISTER_B = STACK.pop()
     REGISTER_A = STACK.pop()
@@ -60,7 +57,7 @@ def mema(): #
         raise Exception("Not enough memory!")
     RAM[REGISTER_A] = REGISTER_B
 
-def memr(): # 
+def memr():  
     global REGISTER_B, REGISTER_A
     REGISTER_A = STACK.pop()
     if(REGISTER_A >= MAX_MEMORY):
@@ -68,12 +65,12 @@ def memr(): #
     push(RAM[REGISTER_A])
 
 # read(x) = m[x] = input() --> push x, push input, mema
-def inp(): # 
+def inp():
     global REGISTER_B, REGISTER_A
     REGISTER_A = int(input("Input an integer: "))
     push(REGISTER_A)
 
-def _print(): # 
+def _print():
     global REGISTER_B, REGISTER_A
     REGISTER_A = STACK.pop()
     print(f">> {REGISTER_A}")
@@ -111,7 +108,7 @@ def _parse_opcode(bytecode):
     instruction = INSTRUCTIONS[opcode]
     parsed_bits = OPCODE_LEN
 
-    if(opcode == 0):
+    if(opcode == 0): # push has additional params: payload length and payload (the value to push)
         payload_len = int(bytecode[parsed_bits : parsed_bits + PUSH_LEN_FIELD_LEN], 2)
         parsed_bits += PUSH_LEN_FIELD_LEN
         value = int(bytecode[parsed_bits : parsed_bits + payload_len], 2)
@@ -121,10 +118,6 @@ def _parse_opcode(bytecode):
     return (parsed_bits, instruction)
             
 def run_bytecode(bytecode):
-    # The file will contain "bytecode": a series of 'opcodes', in binary 
-    # The only 'opcode' with additional parameters will be push (0000):
-    # following it will be 6 bits for the length of the 'payload' and the payload itself (the number to push)
-    # (6 bits because i guess thats the largest number java can handle probably (64 bit number))
     i = 0
     while i < len(bytecode):
         (parsed_bits, instruction) = _parse_opcode(bytecode[i:])
@@ -132,6 +125,9 @@ def run_bytecode(bytecode):
         instruction()
     
 def main():
+    from sys import argv
+    from pathlib import Path
+
     if(len(argv) == 1):
         print("Error: No input file provided!")
         return
