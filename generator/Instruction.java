@@ -29,7 +29,7 @@ public enum Instruction {
     entry(MEMR, "1000"),
     entry(READ, "1001" + "0111"), // read(x) => m[x] = input() --> push x, push input, mema
     entry(EXP, "1010"),
-    entry(ASS, "") // skip
+    entry(ASS, "1011")
   );
 
 

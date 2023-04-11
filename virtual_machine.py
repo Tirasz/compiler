@@ -17,36 +17,43 @@ def _push_wrapper(value):
     return _push
 
 def add(): # 
+    global REGISTER_B, REGISTER_A
     REGISTER_B = STACK.pop()
     REGISTER_A = STACK.pop()
     push(REGISTER_A + REGISTER_B)
 
 def sub(): # 
+    global REGISTER_B, REGISTER_A
     REGISTER_B = STACK.pop()
     REGISTER_A = STACK.pop()
     push(REGISTER_A - REGISTER_B)
 
 def mul(): # 
+    global REGISTER_B, REGISTER_A
     REGISTER_B = STACK.pop()
     REGISTER_A = STACK.pop()
     push(REGISTER_A * REGISTER_B)
 
 def div(): # 
+    global REGISTER_B, REGISTER_A
     REGISTER_B = STACK.pop()
     REGISTER_A = STACK.pop()
     push(REGISTER_A // REGISTER_B)
 
 def mod(): # 
+    global REGISTER_B, REGISTER_A
     REGISTER_B = STACK.pop()
     REGISTER_A = STACK.pop()
     push(REGISTER_A % REGISTER_B)
 
 def pwr(): #
+    global REGISTER_B, REGISTER_A
     REGISTER_B = STACK.pop()
     REGISTER_A = STACK.pop()
     push(REGISTER_A ** REGISTER_B)
 
 def mema(): # 
+    global REGISTER_A, REGISTER_B
     REGISTER_B = STACK.pop()
     REGISTER_A = STACK.pop()
     if(REGISTER_A >= MAX_MEMORY):
@@ -54,6 +61,7 @@ def mema(): #
     RAM[REGISTER_A] = REGISTER_B
 
 def memr(): # 
+    global REGISTER_B, REGISTER_A
     REGISTER_A = STACK.pop()
     if(REGISTER_A >= MAX_MEMORY):
         raise Exception("Not enough memory!")
@@ -61,14 +69,20 @@ def memr(): #
 
 # read(x) = m[x] = input() --> push x, push input, mema
 def inp(): # 
-    REGISTER_A = int(input("Input an integer: \n"))
+    global REGISTER_B, REGISTER_A
+    REGISTER_A = int(input("Input an integer: "))
     push(REGISTER_A)
 
 def _print(): # 
+    global REGISTER_B, REGISTER_A
     REGISTER_A = STACK.pop()
-    print(REGISTER_A)
+    print(f">> {REGISTER_A}")
     if(len(STACK) > 0):
       print("WARGNING: Stack not empty after eval")
+
+def memd():
+    global REGISTER_B, REGISTER_A
+    print(f">> Memory at {REGISTER_A} set to {REGISTER_B}")
 
 INSTRUCTIONS = {
     0: _push_wrapper,
@@ -81,7 +95,8 @@ INSTRUCTIONS = {
     7: mema,
     8: memr,
     9: inp,
-    10: _print   
+    10: _print,
+    11: memd   
 }
 
 def _parse_opcode(bytecode):
