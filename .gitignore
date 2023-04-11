@@ -3,3 +3,4 @@ Byte*
 !Byte.g4
 *.class
 *.bytecode
+*.jar
