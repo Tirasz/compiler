@@ -5,4 +5,4 @@ As input, the program receives integer expressions with the five basic operation
 ## Running: 
 Have java and python installed.  
 Download and copy the [ANTLR 4 jar](http://www.antlr.org/download/antlr-4.11.1-complete.jar) into the project folder.  
-Run the `antlr_generate.bat` script.  
+Run the `run_project` script.  
