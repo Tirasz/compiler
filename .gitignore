@@ -4,3 +4,4 @@ Byte*
 *.class
 *.bytecode
 *.jar
+!antlr-4.11.1-complete.jar
